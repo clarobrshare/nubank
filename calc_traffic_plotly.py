@@ -183,7 +183,8 @@ st.subheader("Distribuição de Tráfego [MB]")
 df_resumo = df_filtrado.groupby(['mês', 'TECNOLOGIA_TRAFEGO']).agg({'QTD_BYTE_TOTAL': 'sum'}).reset_index()
 
 # Calculando a porcentagem por mês
-df_resumo['Porcentagem'] = df_resumo.groupby('mês')['QTD_BYTE_TOTAL'].apply(lambda x: x / x.sum() * 100)
+df_resumo['Porcentagem'] = df_resumo.groupby('mês')['QTD_BYTE_TOTAL'].apply(lambda x: x / x.sum() * 100).reset_index(drop=True)
+
 
 # Criando o gráfico de barras empilhadas
 fig = px.bar(df_resumo, 
