@@ -1,16 +1,23 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[3]:
 
 
 import pandas as pd
+import streamlit as st
+
+@st.cache_data  # Decorador de cache
+def load_data():
+    # Carregue seu arquivo Excel ou faça qualquer processamento demorado aqui
+    df = pd.read_excel("trafego_dados_criticos.xlsx")
+    return df
 
 # Defina o caminho dos arquivos
 caminho_dados_criticos = "trafego_dados_criticos.xlsx"
 
 # Carregue os arquivos em DataFrames
-df_dados_criticos_full = pd.read_excel(caminho_dados_criticos)
+df_dados_criticos_full = load_data()
 
 
 # In[3]:
@@ -132,11 +139,11 @@ st.subheader("Top 10 NTC x Volume Total [MB]")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Abril")
+    st.markdown("<h5 style='font-weight: bold;'>Abril</h5>", unsafe_allow_html=True)
     st.dataframe(top_abril[['Ranking', 'NUM_TEL_ASS_VISIT', 'QTD_BYTE_TOTAL']], hide_index=True)
 
 with col2:
-    st.subheader("Maio")
+    st.markdown("<h5 style='font-weight: bold;'>Maio</h5>", unsafe_allow_html=True)
     st.dataframe(top_maio[['Ranking', 'NUM_TEL_ASS_VISIT', 'QTD_BYTE_TOTAL']], hide_index=True)
 
 
@@ -161,11 +168,11 @@ st.subheader("Top 10 Estações x Volume Total [MB]")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Abril")
+    st.markdown("<h5 style='font-weight: bold;'>Abril</h5>", unsafe_allow_html=True)
     st.dataframe(top_abril[['Ranking', 'DSC_STATION', 'QTD_BYTE_TOTAL']], hide_index=True)
 
 with col2:
-    st.subheader("Maio")
+    st.markdown("<h5 style='font-weight: bold;'>Maio</h5>", unsafe_allow_html=True)
     st.dataframe(top_maio[['Ranking', 'DSC_STATION', 'QTD_BYTE_TOTAL']], hide_index=True)
 
 
@@ -184,7 +191,6 @@ df_resumo = df_filtrado.groupby(['mês', 'TECNOLOGIA_TRAFEGO']).agg({'QTD_BYTE_T
 
 # Calculando a porcentagem por mês
 df_resumo['Porcentagem'] = df_resumo.groupby('mês')['QTD_BYTE_TOTAL'].apply(lambda x: x / x.sum() * 100).reset_index(drop=True)
-
 
 # Criando o gráfico de barras empilhadas
 fig = px.bar(df_resumo, 
